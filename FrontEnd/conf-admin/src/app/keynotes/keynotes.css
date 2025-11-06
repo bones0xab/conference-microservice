@@ -1,0 +1,59 @@
+/*
+ * Styles for Keynotes Component
+ */
+
+/* 1. Style the component host as a "card" */
+:host {
+  display: block;
+  background-color: #ffffff;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* 2. Style the section headings (<h3>) */
+h3 {
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+/* 3. Improve form spacing and labels */
+form label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+form .mb-2 {
+  margin-bottom: 1rem !important;
+}
+
+/* 4. Add a hover effect to table rows */
+tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* 5. Clean up table action buttons */
+.table .btn {
+  min-width: 65px;
+}
+
+/* 6. Style the loading/error/empty states */
+.alert,
+.loading-state,
+.empty-state {
+  margin-top: 1rem;
+  text-align: center;
+  font-style: italic;
+  color: #6c757d;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.alert-danger {
+  background-color: #f8d7da; /* Bootstrap 5 danger-light color */
+  color: #58151c;
+}

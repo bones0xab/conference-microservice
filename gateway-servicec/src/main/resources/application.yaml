@@ -1,0 +1,27 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: key-conf
+          uri: lb://KEY-CONF
+          predicates:
+            - Path=/api/keynotes/**
+          filters:
+            - TokenRelay=
+        - id: conference-service
+          uri: lb://CONFERENCE-SERVICE
+          predicates:
+            - Path=/api/conferences/**
+          filters:
+            - TokenRelay=
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # This tells Spring how to validate the token
+          issuer-uri: http://localhost:8080/realms/master
+          jwk-set-uri: http://localhost:8080/realms/master/protocol/openid-connect/certs
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.cloud.gateway: DEBUG

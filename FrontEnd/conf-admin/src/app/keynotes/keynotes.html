@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="col-md-6">
+    <h3>Keynotes</h3>
+
+    @if (keynotes$ | async; as keynotes) {
+
+      @if (error) {
+        <div class="alert alert-danger">{{ error }}</div>
+      }
+
+      @else if (keynotes.length > 0) {
+        <table class="table table-striped" role="table">
+          <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Email</th>
+            <th>Fonction</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (k of keynotes; track k.id) {
+              <tr>
+                <td>{{ k.nom }}</td>
+                <td>{{ k.prenom }}</td>
+                <td>{{ k.email }}</td>
+                <td>{{ k.fonction }}</td>
+                <td>
+                  <button class="btn btn-sm btn-outline-primary me-1" (click)="edit(k)">Edit</button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="deleteOne(k.id)">Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+
+      @else {
+        <div>No keynotes found.</div>
+      }
+
+    } @else {
+      <div>Loading...</div>
+    }
+
+  </div>
+
+  <div class="col-md-6">
+    <h3>{{ editingId ? 'Edit' : 'Create' }} Keynote</h3>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="mb-2">
+        <label>Nom</label>
+        <input formControlName="nom" class="form-control" />
+      </div>
+      <div class="mb-2">
+        <label>Prénom</label>
+        <input formControlName="prenom" class="form-control" />
+      </div>
+      <div class="mb-2">
+        <label>Email</label>
+        <input formControlName="email" class="form-control" />
+      </div>
+      <div class="mb-2">
+        <label>Fonction</label>
+        <input formControlName="fonction" class="form-control" />
+      </div>
+      <div>
+        <button class="btn btn-primary" [disabled]="form.invalid">{{ editingId ? 'Update' : 'Create' }}</button>
+        <button type="button" class="btn btn-secondary ms-2" (click)="reset()">Reset</button>
+      </div>
+    </form>
+  </div>
+</div>
