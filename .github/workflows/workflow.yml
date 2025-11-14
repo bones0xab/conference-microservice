@@ -1,37 +1,46 @@
-name: workflow
+  name: CI
 
-on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main, develop ]
+  on:
+    push:
+      branches: [ main, develop ]
+    pull_request:
+      branches: [ main, develop ]
 
-jobs:
-  backend:
-    name: Build & Test Backend
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  jobs:
+    backend:
+      name: Build & Test Backend
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
 
-      - name: Setup Java (Temurin)
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'maven'
+        - name: Detect backend directory
+          id: detect
+          run: |
+            if [ -d backend ]; then
+              echo "backend_dir=backend" >> $GITHUB_OUTPUT
+            elif [ -f pom.xml ]; then
+              echo "backend_dir=." >> $GITHUB_OUTPUT
+            else
+              echo "backend_dir=" >> $GITHUB_OUTPUT
+            fi
 
-      - name: Build & test (Maven)
-        run: mvn -B -V clean verify
-        working-directory: backend
+        - name: Setup Java (Temurin)
+          if: ${{ steps.detect.outputs.backend_dir != '' }}
+          uses: actions/setup-java@v4
+          with:
+            distribution: 'temurin'
+            java-version: '17'
+            cache: 'maven'
 
-      - name: Package (jar)
-        run: mvn -B -DskipTests package
-        working-directory: backend
+        - name: Build & test (Maven)
+          if: ${{ steps.detect.outputs.backend_dir != '' }}
+          run: mvn -B -V clean verify
+          working-directory: ${{ steps.detect.outputs.backend_dir }}
 
-      - name: Upload backend artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-jar
-          path: backend/**/target/*.jar
+        - name: Upload backend artifact
+          if: ${{ steps.detect.outputs.backend_dir != '' }}
+          uses: actions/upload-artifact@v4
+          with:
+            name: backend-jar
+            path: ${{ steps.detect.outputs.backend_dir }}/**/target/*.jar
